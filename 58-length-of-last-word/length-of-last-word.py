@@ -4,15 +4,19 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        # Remove trailing spaces from the end of the string
-        s = s.rstrip()
+        ## Initialize a variable to keep track of the length of the last word
+        length = 0
         
-        # Split the string by spaces to get a list of words
-        words = s.split(' ')
+        # Flag to track if we've encountered the last word
+        last_word_found = False
         
-        # Check if there are any words in the list
-        if len(words) == 0:
-            return 0
+        # Start from the end of the string and move left
+        for i in range(len(s) - 1, -1, -1):
+            if s[i] != ' ':
+                length += 1
+                last_word_found = True
+            elif last_word_found:
+                # If we've already encountered the last word and found a space, break
+                break
         
-        # Return the length of the last word in the list
-        return len(words[-1])       
+        return length     
