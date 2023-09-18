@@ -8,13 +8,11 @@ class Solution(object):
         """
         :type head: ListNode
         :rtype: ListNode
-        """
-        current = head
-        
-        while current is not None and current.next is not None:
-            if current.val == current.next.val:
-                current.next = current.next.next
+        """       
+        h = head
+        while h and h.next:
+            if h.val == h.next.val:
+                h.next = h.next.next
             else:
-                current = current.next
-        
-        return head        
+                h=h.next
+        return head 
