@@ -14,14 +14,11 @@ class Solution(object):
          # Base case: If both trees are empty, they are the same.
         if p is None and q is None:
             return True
-        
-        # Base case: If one tree is empty while the other is not, they are not the same.
+        # If only one of the nodes is None, they are not identical
         if p is None or q is None:
             return False
-        
-        # Check if the current nodes have the same value.
-        if p.val != q.val:
-            return False
-        
-        # Recursively check the left and right subtrees.
-        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+        # Check if values are equal and recursively check left and right subtrees
+        if p.val == q.val:
+            return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+        # Values are not equal, they are not identical
+        return False
