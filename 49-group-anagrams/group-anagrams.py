@@ -7,16 +7,13 @@ class Solution(object):
         anagrams = {}
         
         for word in strs:
-            # Calculate a hash value
-            count = [0] * 26  # Assuming lowercase English letters
-            for char in word:
-                count[ord(char) - ord('a')] += 1
-            hash_value = tuple(count)
+            # Sort the characters in the word
+            sorted_word = ''.join(sorted(word))
             
-            # Append the word to the list of anagrams with the same hash value
-            if hash_value in anagrams:
-                anagrams[hash_value].append(word)
+            # Append the word to the list of anagrams with the same sorted characters
+            if sorted_word in anagrams:
+                anagrams[sorted_word].append(word)
             else:
-                anagrams[hash_value] = [word]
+                anagrams[sorted_word] = [word]
         
         return list(anagrams.values())
