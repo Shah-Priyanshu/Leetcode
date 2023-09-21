@@ -4,19 +4,19 @@ class Solution(object):
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        # Create a dictionary to store anagrams
-        anagrams = defaultdict(list)
+        anagrams = {}
         
-        # Iterate through each string
         for word in strs:
-            # Sort the characters to create a unique key
-            # for anagrams that have the same sorted characters
-            sorted_word = ''.join(sorted(word))
+            # Calculate a hash value
+            count = [0] * 26  # Assuming lowercase English letters
+            for char in word:
+                count[ord(char) - ord('a')] += 1
+            hash_value = tuple(count)
             
-            # Append the word to the list of its anagrams
-            anagrams[sorted_word].append(word)
+            # Append the word to the list of anagrams with the same hash value
+            if hash_value in anagrams:
+                anagrams[hash_value].append(word)
+            else:
+                anagrams[hash_value] = [word]
         
-        # Convert the values of the dictionary (lists of anagrams) to a list
-        result = list(anagrams.values())
-        
-        return result
+        return list(anagrams.values())
