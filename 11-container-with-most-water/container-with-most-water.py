@@ -4,24 +4,19 @@ class Solution(object):
         :type height: List[int]
         :rtype: int
         """
-        max_water = 0
-        left = 0
-        right = len(height) - 1
+        res = 0
+        l, r = 0, len(height) - 1
+        max_height = max(height)
 
-        while left < right:
-            # Calculate the width between the two vertical lines.
-            width = right - left
-            # Calculate the minimum height between the two vertical lines.
-            min_height = min(height[left], height[right])
-            # Calculate the water trapped in this container.
-            water = width * min_height
-            # Update the maximum water if this container has more water.
-            max_water = max(max_water, water)
+        while l < r:
+            res = max(res, min(height[l], height[r]) * (r - l))
 
-            # Move the pointers towards each other, trying to find a larger container.
-            if height[left] < height[right]:
-                left += 1
-            else:
-                right -= 1
+            if height[l] < height[r]:
+                l += 1
+            elif height[r] <= height[l]:
+                r -= 1
 
-        return max_water
+            if (max_height * (r - l)) <= res:
+                break
+
+        return res
