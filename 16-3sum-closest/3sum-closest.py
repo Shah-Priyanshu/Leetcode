@@ -5,23 +5,38 @@ class Solution(object):
         :type target: int
         :rtype: int
         """
-        nums.sort()  # Sort the input array in ascending order
-        closest_sum = float('inf')  # Initialize closest_sum to positive infinity
-
-        for i in range(len(nums) - 2):
-            left, right = i + 1, len(nums) - 1  # Initialize two pointers
-            while left < right:
-                current_sum = nums[i] + nums[left] + nums[right]
+        nums.sort()
+        
+        ans = sum(nums[:3])
+        
+        for i in range(len(nums)-2):
+			# some simple checking 
+            if i>0 and nums[i] == nums[i-1]: continue
+            cur_minsum = nums[i] + nums[i+1] + nums[i+2]
+            cur_maxsum = nums[i] + nums[-2] + nums[-1]
+            if cur_minsum >= target:
+                if abs(cur_minsum-target) < abs(ans-target):
+                    return cur_minsum
+                else: return ans
+            if cur_maxsum < target:
+                if abs(cur_maxsum-target) < abs(ans-target):
+                    ans = cur_maxsum
+                continue
+            
+			# two pointer searching
+            j = i+1
+            k = len(nums)-1
+            while j < k:
+                s = nums[i]+nums[j]+nums[k] 
+                if s == target:
+                    return target
+                if abs(target-s) < abs(target-ans):
+                    ans = s
                 
-                if current_sum == target:
-                    return current_sum  # Found an exact match, return it
-                
-                if abs(target - current_sum) < abs(target - closest_sum):
-                    closest_sum = current_sum  # Update closest_sum if the current sum is closer to the target
-                
-                if current_sum < target:
-                    left += 1
+                if s < target:
+                    j += 1
                 else:
-                    right -= 1
-
-        return closest_sum
+                    k -= 1
+                
+                
+        return ans
