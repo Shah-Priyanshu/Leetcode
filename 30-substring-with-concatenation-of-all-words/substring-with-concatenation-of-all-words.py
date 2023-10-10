@@ -5,56 +5,45 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[int]
         """
-        from collections import Counter, defaultdict
-
-class TrieNode:
-    def __init__(self):
-        self.children = defaultdict(TrieNode)
-        self.word_count = 0
-
-class Solution(object):
-    def findSubstring(self, s, words):
-        """
-        :type s: str
-        :type words: List[str]
-        :rtype: List[int]
-        """
-        if not s or not words:
-            return []
-
-        word_len = len(words[0])
-        total_len = len(words) * word_len
-        word_count = Counter(words)
+        wordLength = len(words[0])
+        substrLength = wordLength * len(words)
+        expectedWordCounts = collections.Counter(words)
+        #print('expectedWordCounts ', expectedWordCounts)
         result = []
-        trie = TrieNode()
 
-        for word in words:
-            node = trie
-            for char in word:
-                node = node.children[char]
-            node.word_count += 1
+        # Trying each way to split `s`
+        # into consecutive words of length `substrLength`
+        for offset in range(wordLength):
+            wordCounts = {word: 0 for word in expectedWordCounts.keys()}
+            #print('wordCounts ', wordCounts)
+            #print('type of jawn', type(wordCounts))
+            # Start with counting words in the first substring
+            for i in range(offset, substrLength + offset, wordLength):
+                word = s[i : i + wordLength]
+                if word in wordCounts:
+                    wordCounts[word] += 1
 
-        for i in range(word_len):
-            left, right = i, i
-            curr_count = Counter()
-
-            while right + word_len <= len(s):
-                word = s[right:right + word_len]
-                right += word_len
-
-                if word in word_count:
-                    curr_count[word] += 1
-
-                    while curr_count[word] > word_count[word]:
-                        left_word = s[left:left + word_len]
-                        left += word_len
-                        curr_count[left_word] -= 1
-
-                    if right - left == total_len:
-                        result.append(left)
-
-                else:
-                    curr_count.clear()
-                    left = right
+            if wordCounts == expectedWordCounts:
+                result.append(offset)
+        
+            # Then iterate the other substrings
+            # by adding a word at the end and removing the first word
+            for start in range(
+                offset + wordLength,
+                len(s) - substrLength + 1,
+                wordLength,
+            ):
+                removedWord = s[start - wordLength : start]
+                addedWord = s[
+                    start + substrLength - wordLength :
+                    start + substrLength
+                ]
+                if removedWord in wordCounts:
+                    wordCounts[removedWord] -= 1
+                if addedWord in wordCounts:
+                    wordCounts[addedWord] += 1
+        
+                if wordCounts == expectedWordCounts:
+                    result.append(start)
 
         return result
