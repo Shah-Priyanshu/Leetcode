@@ -4,19 +4,21 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        stack = []
-        max_length = 0
-        stack.append(-1)
+        if len(s) < 2:
+            return 0
 
-        for i in range(len(s)):
-            if s[i] == '(':
-                stack.append(i)
-            else:
-                stack.pop()
-                if not stack:
-                    stack.append(i)
+        temp = 0
+        count = [0] * len(s)
+        for i in range(1, len(s)):
+            if s[i] == ')':
+                if s[i-1] == ')':
+                    temp = i - 1 - count[i-1]
+                    if temp >= 0 and s[temp] == '(':
+                        count[i] = count[i-1] + 2 + (count[temp-1] if temp-1 >= 0 else 0)
                 else:
-                    max_length = max(max_length, i - stack[-1])
+                    count[i] = count[i-2] + 2
 
-        return max_length
-        
+                #if previou < count[i]:
+                    #previou = count[i]
+        #print(count)
+        return max(count)
