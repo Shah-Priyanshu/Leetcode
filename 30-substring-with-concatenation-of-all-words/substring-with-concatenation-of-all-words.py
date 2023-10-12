@@ -1,3 +1,5 @@
+from collections import Counter
+
 class Solution(object):
     def findSubstring(self, s, words):
         """
@@ -5,45 +7,18 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[int]
         """
-        wordLength = len(words[0])
-        substrLength = wordLength * len(words)
-        expectedWordCounts = collections.Counter(words)
-        #print('expectedWordCounts ', expectedWordCounts)
-        result = []
-
-        # Trying each way to split `s`
-        # into consecutive words of length `substrLength`
-        for offset in range(wordLength):
-            wordCounts = {word: 0 for word in expectedWordCounts.keys()}
-            #print('wordCounts ', wordCounts)
-            #print('type of jawn', type(wordCounts))
-            # Start with counting words in the first substring
-            for i in range(offset, substrLength + offset, wordLength):
-                word = s[i : i + wordLength]
-                if word in wordCounts:
-                    wordCounts[word] += 1
-
-            if wordCounts == expectedWordCounts:
-                result.append(offset)
-        
-            # Then iterate the other substrings
-            # by adding a word at the end and removing the first word
-            for start in range(
-                offset + wordLength,
-                len(s) - substrLength + 1,
-                wordLength,
-            ):
-                removedWord = s[start - wordLength : start]
-                addedWord = s[
-                    start + substrLength - wordLength :
-                    start + substrLength
-                ]
-                if removedWord in wordCounts:
-                    wordCounts[removedWord] -= 1
-                if addedWord in wordCounts:
-                    wordCounts[addedWord] += 1
-        
-                if wordCounts == expectedWordCounts:
-                    result.append(start)
-
-        return result
+        if not words:
+            return []
+        k = len(words[0])
+        res = []
+        for left in range(k):
+            d = Counter()
+            for right in range(left + k, len(s) + 1, k):
+                word = s[right - k:right]
+                d[word] += 1
+                while d[word] > words.count(word):
+                    d[s[left:left + k]] -= 1
+                    left += k
+                if right - left == len(words) * k:
+                    res.append(left)
+        return res
