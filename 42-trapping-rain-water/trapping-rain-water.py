@@ -4,18 +4,26 @@ class Solution(object):
         :type height: List[int]
         :rtype: int
         """
-        stack = []
-        result = 0
-
-        for current in range(len(height)):
-            while stack and height[current] > height[stack[-1]]:
-                top = stack.pop()
-                if not stack:
-                    break
-                distance = current - stack[-1] - 1
-                bounded_height = min(height[current], height[stack[-1]]) - height[top]
-                result += distance * bounded_height
-
-            stack.append(current)
-
-        return result
+        
+        out = 0
+        n = len(height)
+        if n == 0:
+            return 0
+        left = 0
+        right = n - 1
+        lmax = height[0]
+        rmax = height[-1]
+        while left < right:
+            if height[left] < height[right]:
+                if height[left] < lmax:
+                    out += lmax - height[left]
+                else:
+                    lmax = height[left]
+                left += 1
+            else:
+                if height[right] < rmax:
+                    out += rmax - height[right]
+                else:
+                    rmax = height[right]
+                right -= 1
+        return out
