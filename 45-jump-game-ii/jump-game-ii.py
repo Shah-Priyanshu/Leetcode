@@ -4,9 +4,9 @@ class Solution(object):
         if n == 1:
             return 0
 
-        max_reach = nums[0]  
-        steps = nums[0]  
-        jumps = 1 
+        max_reach = nums[0]  # Maximum reachable index after the current jump
+        steps = nums[0]  # Number of steps in the current jump
+        jumps = 1  # Number of jumps needed
 
         for i in range(1, n):
             if i == n - 1:
@@ -19,4 +19,5 @@ class Solution(object):
                 jumps += 1
                 steps = max_reach - i
 
-        return 0  
+        return 0  # This should not be reached since it's guaranteed that you can reach the end
+
