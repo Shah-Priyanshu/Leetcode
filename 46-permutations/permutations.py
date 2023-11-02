@@ -4,14 +4,18 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        def backtrack(first = 0):
-            if first == len(nums):
-                result.append(nums[:])
-            for i in range(first, len(nums)):
-                nums[first], nums[i] = nums[i], nums[first]
-                backtrack(first + 1)
-                nums[first], nums[i] = nums[i], nums[first]  # Backtrack
+
+        sol = []
         
-        result = []
-        backtrack()
-        return result
+        def dfs(done, todo):
+            if len(todo) == 0:
+                sol.append(done)
+                return
+
+            for i in range(len(todo)):
+                dfs(done + [todo[i]], todo[0:i] + todo[i+1:])
+
+        for i in range(len(nums)):
+            dfs([nums[i]], nums[0:i] + nums[i+1:])
+
+        return sol
