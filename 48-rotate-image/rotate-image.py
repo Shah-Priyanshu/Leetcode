@@ -4,13 +4,9 @@ class Solution(object):
         :type matrix: List[List[int]]
         :rtype: None Do not return anything, modify matrix in-place instead.
         """
-        n = len(matrix)
-
-        # Transpose the matrix
-        for i in range(n):
-            for j in range(i, n):
+        length = len(matrix)
+        matrix.reverse()
+        for i in range(length):
+            for j in range(i):
                 matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
-
-        # Reverse each row to get the 90-degree clockwise rotation
-        for i in range(n):
-            matrix[i] = matrix[i][::-1]
+        
