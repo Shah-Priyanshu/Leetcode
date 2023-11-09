@@ -1,13 +1,15 @@
+from collections import defaultdict
+
 class Solution(object):
     def groupAnagrams(self, strs):
         """
         :type strs: List[str]
         :rtype: List[List[str]]
         """
-        anagrams = {}
+        anagrams = defaultdict(list)
         
         for word in strs:
-            # Initialize a count array for characters 'a' to 'z'
+            # Count the occurrences of each character in the word
             count = [0] * 26
             for char in word:
                 count[ord(char) - ord('a')] += 1
@@ -16,9 +18,6 @@ class Solution(object):
             key = tuple(count)
             
             # Check if the key is already in the dictionary
-            if key in anagrams:
-                anagrams[key].append(word)
-            else:
-                anagrams[key] = [word]
+            anagrams[key].append(word)
         
         return list(anagrams.values())
