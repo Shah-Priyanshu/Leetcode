@@ -7,13 +7,18 @@ class Solution(object):
         anagrams = {}
         
         for word in strs:
-            # Sort the characters in the word
-            sorted_word = ''.join(sorted(word))
+            # Initialize a count array for characters 'a' to 'z'
+            count = [0] * 26
+            for char in word:
+                count[ord(char) - ord('a')] += 1
             
-            # Append the word to the list of anagrams with the same sorted characters
-            if sorted_word in anagrams:
-                anagrams[sorted_word].append(word)
+            # Convert the count list to a tuple to use it as a dictionary key
+            key = tuple(count)
+            
+            # Check if the key is already in the dictionary
+            if key in anagrams:
+                anagrams[key].append(word)
             else:
-                anagrams[sorted_word] = [word]
+                anagrams[key] = [word]
         
         return list(anagrams.values())
