@@ -1,30 +1,29 @@
 class Solution(object):
     def solveNQueens(self, n):
-        """
-        :type n: int
-        :rtype: List[List[str]]
-        """
-        def solve(row, columns, diagonals, anti_diagonals, current_solution):
-            if row == n:
-                solutions.append(current_solution[:])
+        board=[["."]*n for i in range(n)]
+        pos=set()
+        neg=set()
+        col=set()
+        res=[]
+        def backtrack(r):
+            if(r==n):
+                copy=["".join(row) for row in board]
+                res.append(copy)
                 return
+            for i in range(0,n):
+                if(i in col or (r+i) in pos or (r-i) in neg):
+                    continue
+                
+                board[r][i]="Q"
+                pos.add(r+i)
+                neg.add(r-i)
+                col.add(i)
 
-            for col in range(n):
-                col_mask, diag_mask, anti_diag_mask = 1 << col, 1 << (row + col), 1 << (row - col + n - 1)
+                backtrack(r+1)
 
-                if not (columns & col_mask) and not (diagonals & diag_mask) and not (anti_diagonals & anti_diag_mask):
-                    columns ^= col_mask
-                    diagonals ^= diag_mask
-                    anti_diagonals ^= anti_diag_mask
-                    current_solution.append(col)
-
-                    solve(row + 1, columns, diagonals, anti_diagonals, current_solution)
-
-                    columns ^= col_mask
-                    diagonals ^= diag_mask
-                    anti_diagonals ^= anti_diag_mask
-                    current_solution.pop()
-
-        solutions = []
-        solve(0, 0, 0, 0, [])
-        return [["." * col + "Q" + "." * (n - col - 1) for col in solution] for solution in solutions]
+                board[r][i]="."
+                pos.remove(r+i)
+                neg.remove(r-i)
+                col.remove(i)
+        backtrack(0)
+        return res
