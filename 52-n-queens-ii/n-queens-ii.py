@@ -4,17 +4,26 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        def solve(row, columns, diagonals, anti_diagonals, count):
-            if row == n:
-                return count + 1
-
-            total_count = count
-            for col in range(n):
-                col_mask, diag_mask, anti_diag_mask = 1 << col, 1 << (row + col), 1 << (row - col + n - 1)
-
-                if not (columns & col_mask) and not (diagonals & diag_mask) and not (anti_diagonals & anti_diag_mask):
-                    total_count = solve(row + 1, columns | col_mask, diagonals | diag_mask, anti_diagonals | anti_diag_mask, total_count)
-
-            return total_count
-
-        return solve(0, 0, 0, 0, 0)
+        count=[0]
+        col=set()
+        posDiag=set()
+        negDiag=set()
+        board=[['.' for i in range(n)] for j in range(n)]
+        def backtrack(r):
+            if r==n:
+                count[0]+=1
+                return
+            for c in range(n):
+                if c in col or (r+c) in posDiag or (r-c) in negDiag:
+                    continue
+                col.add(c)
+                posDiag.add(r+c)
+                negDiag.add(r-c)
+                board[r][c]='Q'
+                backtrack(r+1)
+                col.remove(c)
+                posDiag.remove(r+c)
+                negDiag.remove(r-c)
+                board[r][c]='.'
+        backtrack(0)
+        return count[0]
