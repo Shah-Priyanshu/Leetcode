@@ -4,13 +4,17 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        if not nums:
-            return 0
+        sum=0
+        max_sum=nums[0]
 
-        current_sum = max_sum = nums[0]
-
-        for num in nums[1:]:
-            current_sum = max(num, current_sum + num)
-            max_sum = max(max_sum, current_sum)
+        for num in nums:
+            if sum+num>0:
+                sum+=num
+                if sum>max_sum:
+                    max_sum=sum
+            else:
+                sum=0
+                if num>max_sum:
+                    max_sum=num
 
         return max_sum
