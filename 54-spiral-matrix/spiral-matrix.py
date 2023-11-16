@@ -4,36 +4,59 @@ class Solution(object):
         :type matrix: List[List[int]]
         :rtype: List[int]
         """
-        result = []
-        rows, columns = len(matrix), len(matrix[0])
-        up = left = 0
-        right = columns - 1
-        down = rows - 1
+        spiral = []
+        while len(matrix)>0:
+            if len(matrix) == 0:
+                break
+            else:
+                #move forward
+                for i in range(0, len(matrix[0])):
+                    if len(matrix[0]) == 0:
+                        break
+                    else:
+                        #traversing through the first array
+                        spiral.append(matrix[0][0])
+                        #after adding each element remove the element.
+                        matrix[0].remove(matrix[0][0])
+                #after moving forward, definitely we have to remove the list.
+                matrix.remove(matrix[0]) #Hopefully, this is an empty list.
 
-        while len(result) < rows * columns:
-            # Traverse from left to right.
-            for col in range(left, right + 1):
-                result.append(matrix[up][col])
+            if len(matrix) == 0:
+                break
+            else:
+                #move downward
+                for i in range(0, len(matrix)):
+                    if len(matrix[i]) == 0:
+                        break
+                    else:
+                        spiral.append(matrix[i][-1])
+                        #remove from the list
+                        matrix[i].remove(matrix[i][-1])
+            
+            if len(matrix) == 0:
+                break
+            else:
+                #move backward
+                for i in range(0, len(matrix[-1])):
+                    if len(matrix[-1]) == 0:
+                        break
+                    else:
+                        spiral.append(matrix[-1][-1])
+                        #remove element
+                        matrix[-1].remove(matrix[-1][-1])
+                #after traversing backward, the list is definitely empty
+                matrix.remove(matrix[-1]) #Removes the last list
 
-            # Traverse downwards.
-            for row in range(up + 1, down + 1):
-                result.append(matrix[row][right])
+            if len(matrix) == 0:
+                break
+            else:
+            #move upward
+                for i in range(1, len(matrix)+1):
+                    if len(matrix[-i]) == 0:
+                        break
+                    else:
+                        spiral.append(matrix[-i][0])
+                        #remove element
+                        matrix[-i].remove(matrix[-i][0])
 
-            # Make sure we are now on a different row.
-            if up != down:
-                # Traverse from right to left.
-                for col in range(right - 1, left - 1, -1):
-                    result.append(matrix[down][col])
-
-            # Make sure we are now on a different column.
-            if left != right:
-                # Traverse upwards.
-                for row in range(down - 1, up, -1):
-                    result.append(matrix[row][left])
-
-            left += 1
-            right -= 1
-            up += 1
-            down -= 1
-
-        return result
+        return spiral
