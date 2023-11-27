@@ -4,36 +4,27 @@ class Solution(object):
         :type n: int
         :rtype: List[List[int]]
         """
+        matrix=[[0]*n for i in range(n)]
+        left,right=0,n-1
+        top,bottom=0,n-1
+        count=1
+        while left<=right:
+            for i in range(left,right+1):
+                matrix[top][i]=count
+                count+=1
+            top+=1
+            for i in range(top,bottom+1):
+                matrix[i][right]=count
+                count+=1
+            right-=1
+            for i in range(right,left-1,-1):
+                matrix[bottom][i]=count
+                count+=1
+            bottom-=1
+            for i in range(bottom,top-1,-1):
+                matrix[i][left]=count
+                count+=1
+            left+=1
+        return matrix
+
         
-        out = [[-1] * n for i in range(n)]
-
-        row, col = None, None
-        row_dir, col_dir = 0, 1
-
-        for i in range(1, 1 + n * n):
-            if row is None:
-                row, col = 0, 0
-            
-            else:
-                if row_dir > 0:
-                    if (row + row_dir) >= n or out[row + row_dir][col] > 0:
-                        row_dir, col_dir = 0, -1
-
-                elif row_dir < 0:
-                    if (row + row_dir) < 0 or out[row + row_dir][col] > 0:
-                        row_dir, col_dir = 0, 1
-
-                elif col_dir > 0:
-                    if (col + col_dir) >= n or out[row][col + col_dir] > 0:
-                        row_dir, col_dir = 1, 0
-                
-                else:
-                    if (col + col_dir) < 0 or out[row][col + col_dir] > 0:
-                        row_dir, col_dir = -1, 0       
-
-                row, col = row + row_dir, col + col_dir
-            
-
-            out[row][col] = i
-
-        return out
