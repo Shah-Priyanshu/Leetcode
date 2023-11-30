@@ -5,12 +5,8 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        
-        row = [1] * n
-        for i in range(1, m):
-            next_row = [1] * n
-            for j in range(1, n):
-                next_row[j] = next_row[j-1] + row[j]
-            row = next_row
-        
-        return row[-1]
+        dp = [[1]*n]*m
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        return dp[m-1][n-1]
