@@ -5,26 +5,22 @@ class Solution(object):
         :type target: int
         :rtype: bool
         """
-        top = 0               
-        bottom = len(matrix) - 1
-        while top <= bottom:
-            mid = (top + bottom) // 2
-            if target < matrix[mid][0]:
-                bottom = mid - 1
-            elif target > matrix[mid][-1]:
-                top = mid + 1
-            else:
-                break
-        row = mid
-        lo = 0
-        hi = len(matrix[0]) - 1
-        while lo <= hi:
-            mid = (lo + hi) // 2
-            if target < matrix[row][mid]:
-                hi = mid - 1
-            elif target > matrix[row][mid]:
-                lo = mid + 1
-            else:
-                return True
+        # using linear search (looping through the matrix) to take each list in it
+        m = len(matrix)
         
+        for i in range(m):
+            lst = matrix[i]
+
+            l = 0
+            r = len(lst) - 1
+
+            while l <= r:
+                mid = (l + r) // 2
+                if target > lst[mid]:
+                    l = mid + 1
+                elif target < lst[mid]:
+                    r = mid - 1
+                else:
+                    return True
+                    
         return False
