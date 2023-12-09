@@ -4,17 +4,16 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        def dfs(array, index):
+        combinations = []
+        self.search(nums, 0, [], combinations)
+        return combinations
 
-            if index == len(nums):
-                return
+    def search(self, nums, index, subset, combinations):
+        combinations.append(list(subset))
 
-            for i in range(index, len(nums)):
-                array.append(nums[i])
-                res.append(array[:])
-                dfs(array[:], i+1) 
-                array.pop()
- 
-        res = [[]]
-        dfs([], 0)
-        return res
+        for i in range(index, len(nums)):
+            subset.append(nums[i])
+            self.search(nums, i + 1, subset, combinations)
+            subset.pop()
+
+        
