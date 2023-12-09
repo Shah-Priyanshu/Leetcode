@@ -1,15 +1,20 @@
-from itertools import combinations
-
 class Solution(object):
     def subsets(self, nums):
         """
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        subsets = []
-        n = len(nums)
+        def dfs(array, index):
 
-        for k in range(n + 1):
-            subsets.extend(combinations(nums, k))
+            if index == len(nums):
+                return
 
-        return [list(subset) for subset in subsets]
+            for i in range(index, len(nums)):
+                array.append(nums[i])
+                res.append(array[:])
+                dfs(array[:], i+1) 
+                array.pop()
+ 
+        res = [[]]
+        dfs([], 0)
+        return res
