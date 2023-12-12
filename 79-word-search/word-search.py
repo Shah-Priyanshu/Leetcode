@@ -1,3 +1,5 @@
+from collections import Counter
+
 class Solution(object):
     def exist(self, board, word):
         """
@@ -5,34 +7,49 @@ class Solution(object):
         :type word: str
         :rtype: bool
         """
-        def backtrack(i, j, k):
-            # Check if the current cell is out of bounds or the letter doesn't match
-            if not (0 <= i < len(board)) or not (0 <= j < len(board[0])) or board[i][j] != word[k]:
-                return False
-            
-            # Check if the word is found
-            if k == len(word) - 1:
-                return True
-            
-            # Mark the current cell as visited
-            temp, board[i][j] = board[i][j], '/'
-            
-            # Explore all possible directions (up, down, left, right)
-            result = (backtrack(i + 1, j, k + 1) or
-                      backtrack(i - 1, j, k + 1) or
-                      backtrack(i, j + 1, k + 1) or
-                      backtrack(i, j - 1, k + 1))
-            
-            # Restore the original value of the cell
-            board[i][j] = temp
-            
-            return result
+        m,n = len(board),len(board[0])
+        if len(word) > m*n:
+            return False
 
-        # Iterate through each cell in the grid to start the search
-        for i in range(len(board)):
-            for j in range(len(board[0])):
-                if backtrack(i, j, 0):
-                    return True
-        
-        # If the loop completes without finding the word, return False
+        count = Counter(sum(board,[]))
+        for c,countWord in Counter(word).items():
+            if count[c] < countWord:
+                return False
+
+        if count[word[0]] > count[word[-1]]:
+            word = word[::-1]
+
+        reqd = len(word)
+
+        def legalcheck(x,y):
+            return 0<=x<=m-1 and 0<=y<=n-1
+
+        def process(node,i):
+            x,y = node[0],node[1]
+            
+            if board[x][y] != word[i]:
+                return False 
+
+            if i == reqd:
+                return True
+
+            original = board[x][y]
+            board[x][y] = '#'
+            ans = True if i == reqd-1 else False
+            
+            for delta in [-1,1]:
+                if legalcheck(x+delta,y):
+                    ans = ans or process((x+delta,y),i+1)
+                if legalcheck(x,y+delta):
+                    ans = ans or process((x,y+delta),i+1)
+
+            board[x][y] = original
+            return ans
+
+        for i in range(m):
+            for j in range(n):
+                result = process((i,j),0)
+                if result:
+                    return result
+
         return False
