@@ -1,25 +1,32 @@
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 class Solution(object):
     def deleteDuplicates(self, head):
         """
         :type head: ListNode
         :rtype: ListNode
         """
-        # Handle the edge case of an empty list or a single node
-        if not head or not head.next:
-            return head
-
-        # Create a dummy node to simplify the deletion process
+        
         dummy = ListNode(0)
-        dummy.next = head
-        current = dummy
+        p = dummy
+        p.next = head
+        curr =-1
 
-        while current.next and current.next.next:
-            if current.next.val == current.next.next.val:
-                # Skip all duplicates at once
-                val_to_remove = current.next.val
-                while current.next and current.next.val == val_to_remove:
-                    current.next = current.next.next
+        while p.next and p.next.next:
+
+            if p.next.val == p.next.next.val :   
+                curr = p.next.val
+                while p.next and p.next.val == curr:
+                    p.next = p.next.next
+                
             else:
-                current = current.next
+                p = p.next
+        
+        if p.next and p.next.val == curr:
+            p.next == None
 
-        return dummy.next
+        return dummy.next 
+        
