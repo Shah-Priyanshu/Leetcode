@@ -1,43 +1,26 @@
 class Solution(object):
-    def maximalRectangle(self, matrix):
-        """
-        :type matrix: List[List[str]]
-        :rtype: int
-        """
-        if not matrix or not matrix[0]:
-            return 0
+   def maximalRectangle(self, matrix):
 
-        rows, cols = len(matrix), len(matrix[0])
-        heights = [0] * cols
-        max_area = 0
+    if not matrix or not matrix[0]:
+        return 0
 
-        for i in range(rows):
-            for j in range(cols):
-                heights[j] = heights[j] + 1 if matrix[i][j] == '1' else 0
+    n = len(matrix[0])
+    height = [0] * (n + 1)
+    maxA = 0
 
-            max_area = max(max_area, self.largestRectangleArea(heights))
+    for row in matrix:
+        for i in range(n):
+            height[i] = height[i] + 1 if row[i] == '1' else 0
 
-        return max_area
+        stack = [-1]
 
-    def largestRectangleArea(self, heights):
-        stack = []
-        max_area = 0
-        width = [0] * len(heights)
-
-        for i in range(len(heights)):
-            while stack and heights[i] < heights[stack[-1]]:
-                top = stack.pop()
-                height = heights[top]
-                w = i if not stack else i - stack[-1] - 1
-                max_area = max(max_area, height * w)
+        for i in range(n + 1):
+            while height[i] < height[stack[-1]]:
+                a = height[stack.pop()] * (i - 1 - stack[-1])
+                
+                if a > maxA:
+                    maxA = a
 
             stack.append(i)
-            width[i] = i if not stack else i - stack[-1]
 
-        while stack:
-            top = stack.pop()
-            height = heights[top]
-            w = len(heights) if not stack else len(heights) - stack[-1] - 1
-            max_area = max(max_area, height * w)
-
-        return max_area
+    return maxA
