@@ -1,29 +1,35 @@
 class Solution(object):
+
+    map = {}
+
     def isScramble(self, s1, s2):
-        """
-        :type s1: str
-        :type s2: str
-        :rtype: bool
-        """
         n = len(s1)
-        if n != len(s2) or sorted(s1) != sorted(s2):
-            return False
 
-        dp = [[[False] * n for _ in range(n)] for _ in range(n)]
+        if s1 == s2:
+            return True
 
-        # Base case: strings of length 1
-        for i in range(n):
-            for j in range(n):
-                dp[0][i][j] = (s1[i] == s2[j])
+        a = defaultdict(int)
+        b = defaultdict(int)
+        c = defaultdict(int)
 
-        # Build up the dynamic programming table
-        for length in range(2, n + 1):
-            for i in range(n - length + 1):
-                for j in range(n - length + 1):
-                    for k in range(1, length):
-                        if (dp[k - 1][i][j] and dp[length - k - 1][i + k][j + k]) or \
-                           (dp[k - 1][i][j + length - k] and dp[length - k - 1][i + k][j]):
-                            dp[length - 1][i][j] = True
-                            break
+        if (s1 + s2) in self.map:
+            return self.map[s1 + s2]
 
-        return dp[n - 1][0][0]
+        for i in range(1, n):
+            j = n - i
+
+            a[s1[i - 1]] += 1
+            b[s2[i - 1]] += 1
+            c[s2[j]] += 1
+
+            if a == b and self.isScramble(s1[:i], s2[:i]) and self.isScramble(s1[i:], s2[i:]):
+                self.map[s1 + s2] = True
+                return True
+
+            if a == c and self.isScramble(s1[:i], s2[j:]) and self.isScramble(s1[i:], s2[:j]):
+                self.map[s1 + s2] = True
+                return True
+
+        self.map[s1 + s2] = False
+
+        return False 
