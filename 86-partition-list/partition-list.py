@@ -10,16 +10,28 @@ class Solution(object):
         :type x: int
         :rtype: ListNode
         """
-        head_less, head_grater = ListNode(), ListNode()
-        left_end, right_end = head_less, head_grater
-        while head:
-            if head.val < x:
-                left_end.next = head
-                left_end = left_end.next
-            else:
-                right_end.next = head
-                right_end = right_end.next
-            head = head.next
-        left_end.next = head_grater.next
-        right_end.next = None
-        return head_less.next
+        
+        from collections import deque
+
+        lt = deque([])    
+        e_gt = deque([])
+        curr = head
+
+        while curr:
+            if curr.val < x: lt.append(curr.val)
+            else: e_gt.append(curr.val)
+            curr = curr.next
+        
+        curr = head
+
+        while lt:
+            curr.val = lt[0]
+            lt.popleft()
+            curr = curr.next
+        
+        while e_gt:
+            curr.val = e_gt[0]
+            e_gt.popleft()
+            curr = curr.next
+
+        return head
