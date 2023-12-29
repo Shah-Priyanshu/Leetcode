@@ -10,28 +10,16 @@ class Solution(object):
         :type x: int
         :rtype: ListNode
         """
-        # Initialize two dummy nodes for the two partitions
-        before_dummy = ListNode(0)
-        after_dummy = ListNode(0)
-
-        # Pointers to the current nodes in the two partitions
-        before = before_dummy
-        after = after_dummy
-
-        # Traverse the original linked list
-        current = head
-        while current:
-            if current.val < x:
-                before.next = current
-                before = before.next
+        head_less, head_grater = ListNode(), ListNode()
+        left_end, right_end = head_less, head_grater
+        while head:
+            if head.val < x:
+                left_end.next = head
+                left_end = left_end.next
             else:
-                after.next = current
-                after = after.next
-
-            current = current.next
-
-        # Connect the two partitions
-        before.next = after_dummy.next
-        after.next = None  # Set the end of the after partition to None
-
-        return before_dummy.next
+                right_end.next = head
+                right_end = right_end.next
+            head = head.next
+        left_end.next = head_grater.next
+        right_end.next = None
+        return head_less.next
