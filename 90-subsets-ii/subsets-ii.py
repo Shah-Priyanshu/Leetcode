@@ -4,16 +4,17 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[List[int]]
         """
-        def backtrack(start, path):
-            result.append(path[:])
-            for i in range(start, len(nums)):
-                if i > start and nums[i] == nums[i - 1]:
-                    continue
-                path.append(nums[i])
-                backtrack(i + 1, path)
-                path.pop()
+        def recurse(nums, index, curr, ret):
+            ret.append(curr)
+            i = index
+            while i < len(nums):
+                print(i)
+                curr.append(nums[i])
+                recurse(nums, i+1, curr[:], ret)
+                used = curr.pop()
+                while i < len(nums) and nums[i] == used:
+                    i += 1
 
-        result = []
-        nums.sort()  # Sorting helps in skipping duplicates
-        backtrack(0, [])
-        return result
+        ret = []
+        recurse(sorted(nums), 0, [], ret)
+        return ret
