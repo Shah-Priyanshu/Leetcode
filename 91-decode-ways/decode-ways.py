@@ -4,28 +4,17 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        cache = {}
+        if not s or s[0] == '0':
+            return 0
 
-        def dfs(i):
-            # Make it till the end => 1 way
-            if i >= len(s):
-                return 1
-            if s[i] == "0":
-                return 0
-            # If in cache => return
-            if i in cache:
-                return cache[i]
+        prev, curr = 1, 1
 
-            res = 0
-            # Current one always count, so DFS
-            res += dfs(i + 1)
-            # Check if can consider 2 letter
-            canOne = i + 1 < len(s) and s[i] == "1"
-            canTwo = i + 1 < len(s) and s[i] == "2" and s[i + 1] in "0123456"
+        for i in range(1, len(s)):
+            if s[i] == '0':
+                curr = 0
+            if s[i - 1] == '1' or (s[i - 1] == '2' and '0' <= s[i] <= '6'):
+                curr, prev = curr + prev, curr
+            else:
+                prev = curr
 
-            if canOne or canTwo:
-                res += dfs(i + 2)
-            cache[i] = res
-            return res
-        
-        return dfs(0)
+        return curr
