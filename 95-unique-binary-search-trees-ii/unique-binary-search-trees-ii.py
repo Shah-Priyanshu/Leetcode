@@ -4,33 +4,28 @@ class TreeNode(object):
         self.val = val
         self.left = left
         self.right = right
-
 class Solution(object):
     def generateTrees(self, n):
         """
         :type n: int
         :rtype: List[TreeNode]
         """
-        if n == 0:
-            return []
-        return self.generateTreesHelper(1, n)
-    
-    def generateTreesHelper(self, start, end):
-        if start > end:
-            return [None]
-        
-        all_trees = []
-        for i in range(start, end + 1):
-            # Generate all possible left and right subtrees
-            left_trees = self.generateTreesHelper(start, i - 1)
-            right_trees = self.generateTreesHelper(i + 1, end)
-            
-            # Connect left and right trees to the root i
-            for l in left_trees:
-                for r in right_trees:
-                    current_tree = TreeNode(i)
-                    current_tree.left = l
-                    current_tree.right = r
-                    all_trees.append(current_tree)
-        
-        return all_trees
+        dp = {}
+        # memoization hashmap: (l, r) : subtree
+        def subtree(l, r):
+            if (l, r) in dp:
+                return dp[(l, r)]
+            res = []
+            if l == r:
+                return [TreeNode(l)]
+            if l > r:
+                return [None]
+            for v in range(l, r+1):
+                left_subtree = subtree(l, v-1)
+                right_subtree = subtree(v+1, r)
+                for lt in left_subtree:
+                    for rt in right_subtree:
+                        res += [TreeNode(v, lt, rt)]
+            dp[(l, r )] = res
+            return res
+        return subtree(1, n)
