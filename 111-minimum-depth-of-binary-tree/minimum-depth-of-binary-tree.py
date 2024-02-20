@@ -4,17 +4,23 @@ class Solution(object):
         :type root: TreeNode
         :rtype: int
         """
-        # Base case: empty tree
-        if not root:
+        from collections import deque
+
+        if root is None:
             return 0
 
-        # Handle leaves directly
-        if not root.left and not root.right:
-            return 1
+        queue = deque([(root, 1)])
 
-        # Recursive case: minimum depth from either child
-        left_depth = float('inf') if not root.left else self.minDepth(root.left)
-        right_depth = float('inf') if not root.right else self.minDepth(root.right)
+        while queue:
+            node, depth = queue.popleft()
 
-        # Minimum depth is 1 + min(left_depth, right_depth)
-        return 1 + min(left_depth, right_depth)
+            if node.left is None and node.right is None:
+                return depth
+
+            if node.left:
+                queue.append((node.left, depth + 1))
+
+            if node.right:
+                queue.append((node.right, depth + 1))
+
+        return 0
