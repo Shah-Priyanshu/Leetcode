@@ -1,13 +1,26 @@
-class Solution():
+class Solution(object):
     def wordBreak(self, s, wordDict):
-        def backtrack(start, path):
-            if start == len(s):
-                solutions.append(' '.join(path))
-                return
-            
-            for end in range(start + 1, len(s) + 1):
-                if s[start:end] in wordDict:
-                    backtrack(end, path + [s[start:end]])
-        solutions = []
-        backtrack(0, [])
-        return solutions
+        """
+        :type s: str
+        :type wordDict: Set[str]
+        :rtype: List[str]
+        """
+        return self.wordBreak_aux(s, wordDict, {})
+        
+    def wordBreak_aux(self, s, wordDict, memo):
+        if s in memo: return memo[s]
+        if not s: return []
+        
+        res = []
+        for word in wordDict:
+            if not s.startswith(word):
+                continue
+            if len(word) == len(s):
+                res.append(word)
+            else:
+                resultOfTheRest = self.wordBreak_aux(s[len(word):], wordDict, memo)
+                for item in resultOfTheRest:
+                    item = word + ' ' + item
+                    res.append(item)
+        memo[s] = res
+        return res
