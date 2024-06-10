@@ -1,4 +1,3 @@
-#Approach 3-Using EXISTS and SUBQUERY 
 SELECT DISTINCT l1.num AS ConsecutiveNums
 FROM Logs l1
 WHERE EXISTS (
