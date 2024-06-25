@@ -1,6 +1,6 @@
 class TrieNode:
     def __init__(self):
-        # Create a fixed-size array for child nodes
+        # Fixed-size array for child nodes (26 lowercase letters)
         self.children = [None] * 26
         self.is_end_of_word = False
 
@@ -35,11 +35,3 @@ class Trie:
                 return False
             node = node.children[index]
         return True
-        
-
-
-# Your Trie object will be instantiated and called as such:
-# obj = Trie()
-# obj.insert(word)
-# param_2 = obj.search(word)
-# param_3 = obj.startsWith(prefix)
