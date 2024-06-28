@@ -2,55 +2,61 @@ class TrieNode:
     def __init__(self):
         self.children = {}
         self.is_end_of_word = False
-        self.word = None
 
 class Trie:
     def __init__(self):
         self.root = TrieNode()
 
     def insert(self, word):
-        node = self.root
+        current = self.root
         for char in word:
-            if char not in node.children:
-                node.children[char] = TrieNode()
-            node = node.children[char]
-        node.is_end_of_word = True
-        node.word = word
+            if char not in current.children:
+                current.children[char] = TrieNode()
+            current = current.children[char]
+        current.is_end_of_word = True
 
-    def delete(self, word):
-        def _delete(node, word, depth):
-            if not node:
-                return False
-
+    def remove(self, word):
+        def _remove(node, word, depth):
             if depth == len(word):
-                if node.is_end_of_word:
-                    node.is_end_of_word = False
-
+                if not node.is_end_of_word:
+                    return False
+                node.is_end_of_word = False
                 return len(node.children) == 0
-
             char = word[depth]
-            if _delete(node.children.get(char), word, depth + 1):
+            if char not in node.children:
+                return False
+            should_delete = _remove(node.children[char], word, depth + 1)
+            if should_delete:
                 del node.children[char]
-                return not node.is_end_of_word and len(node.children) == 0
-
+                return len(node.children) == 0
             return False
 
-        _delete(self.root, word, 0)
+        _remove(self.root, word, 0)
 
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
-        def dfs(node, i, j, visited):
-            if node.is_end_of_word:
-                result.add(node.word)
-                trie.delete(node.word)
-                node.is_end_of_word = False  # Avoid duplicate additions
-
+        def dfs(node, i, j, path):
             char = board[i][j]
-            visited.add((i, j))
+            next_node = node.children.get(char)
+            if not next_node:
+                return
+
+            path.append(char)
+            board[i][j] = '#'  # Mark as visited
+
+            if next_node.is_end_of_word:
+                found_word = ''.join(path)
+                result.add(found_word)
+                trie.remove(found_word)
+                next_node.is_end_of_word = False  # Avoid duplicate additions
+
+            # Explore neighbors
             for x, y in [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]:
-                if 0 <= x < len(board) and 0 <= y < len(board[0]) and (x, y) not in visited and board[x][y] in node.children:
-                    dfs(node.children[board[x][y]], x, y, visited)
-            visited.remove((i, j))
+                if 0 <= x < len(board) and 0 <= y < len(board[0]) and board[x][y] != '#':
+                    dfs(next_node, x, y, path)
+
+            board[i][j] = char  # Unmark as visited
+            path.pop()
 
         # Build Trie
         trie = Trie()
@@ -61,6 +67,6 @@ class Solution:
         for i in range(len(board)):
             for j in range(len(board[0])):
                 if board[i][j] in trie.root.children:
-                    dfs(trie.root.children[board[i][j]], i, j, set())
-        
+                    dfs(trie.root, i, j, [])
+
         return list(result)
