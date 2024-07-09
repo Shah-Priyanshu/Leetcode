@@ -4,13 +4,10 @@ class Solution:
         current_time = 0
         
         for arrival, time_needed in customers:
-            if current_time < arrival:
-                current_time = arrival
-            
-            current_time += time_needed
-            
-            waiting_time = current_time - arrival
-            total_waiting_time += waiting_time
+            # Ensure the chef starts at the right time
+            current_time = max(current_time, arrival) + time_needed
+            # Calculate waiting time for this customer
+            total_waiting_time += current_time - arrival
         
-        average_waiting_time = total_waiting_time / len(customers)
-        return average_waiting_time
+        # Calculate the average waiting time
+        return total_waiting_time / len(customers)
