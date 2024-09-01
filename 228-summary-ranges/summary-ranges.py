@@ -1,23 +1,28 @@
+from typing import List
+
 class Solution:
     def summaryRanges(self, nums: List[int]) -> List[str]:
         result = []
-        if not nums:
+        n = len(nums)
+        
+        if n == 0:
             return result
-
+        
         start = nums[0]
         
-        for i in range(1, len(nums)):
+        for i in range(1, n):
             # Check if the current number is not consecutive
-            if nums[i] != nums[i-1] + 1:
-                # If it is a single number range
-                if start == nums[i-1]:
+            if nums[i] != nums[i - 1] + 1:
+                # If start and previous number are the same, add "start"
+                if start == nums[i - 1]:
                     result.append(str(start))
                 else:
-                    result.append(f"{start}->{nums[i-1]}")
-                # Start a new range
+                    result.append(f"{start}->{nums[i - 1]}")
+                
+                # Update start to the current number
                 start = nums[i]
         
-        # Add the last range
+        # Handle the last range
         if start == nums[-1]:
             result.append(str(start))
         else:
