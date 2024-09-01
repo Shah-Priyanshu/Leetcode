@@ -8,24 +8,17 @@ class Solution:
         if n == 0:
             return result
         
-        start = nums[0]
+        start = 0  # Start index of a range
         
-        for i in range(1, n):
-            # Check if the current number is not consecutive
-            if nums[i] != nums[i - 1] + 1:
-                # If start and previous number are the same, add "start"
-                if start == nums[i - 1]:
-                    result.append(str(start))
+        for i in range(1, n + 1):
+            # Check if we have reached the end of the array or found a break in the consecutive numbers
+            if i == n or nums[i] != nums[i - 1] + 1:
+                # Add the range to the result
+                if start == i - 1:
+                    result.append(str(nums[start]))
                 else:
-                    result.append(f"{start}->{nums[i - 1]}")
-                
+                    result.append(f"{nums[start]}->{nums[i - 1]}")
                 # Update start to the current number
-                start = nums[i]
-        
-        # Handle the last range
-        if start == nums[-1]:
-            result.append(str(start))
-        else:
-            result.append(f"{start}->{nums[-1]}")
+                start = i
         
         return result
