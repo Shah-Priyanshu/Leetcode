@@ -6,26 +6,21 @@
 #         self.right = right
 class Solution:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
-        # Initialize an empty stack to simulate in-order traversal
-        stack = []
-        current = root
-
-        # Perform iterative in-order traversal
-        while current or stack:
-            # Go to the leftmost node
-            while current:
-                stack.append(current)
-                current = current.left
-            
-            # Current is None, process the node on top of the stack
-            current = stack.pop()
-            k -= 1
-            
-            # If k is 0, we found the kth smallest element
-            if k == 0:
-                return current.val
-            
-            # Go to the right subtree
-            current = current.right
+        result = -1
         
-        return -1  # In case of an invalid input
+        def traverse(node):
+            nonlocal k, result
+            if not node or result != -1:
+                return
+
+            traverse(node.left)
+            
+            k -= 1
+            if k == 0:
+                result = node.val
+                return
+            
+            traverse(node.right)
+
+        traverse(root)
+        return result
